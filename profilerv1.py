@@ -6,6 +6,25 @@ tf.flags.DEFINE_multi_string('output_names', [], 'output names')
 FLAGS = tf.flags.FLAGS
 
 def profiler_for_graphdef(graph_def, input_names, output_names, inputs=None, logdir='/tmp/tensorboard', options=None):
+    """profile a GraphDef with profiler v2 api.
+
+    For example:
+
+    >>> python3 profilerv1.py --graph_def=/tmp/graphdef --input_names=x:0 --input_names=y_input:0 --output_names=Mean:0
+
+
+    Args:
+        graph_def: A GraphDef or a GraphDef path.
+        input_names: input tensor names.
+        output_names: output tensor names.
+        inputs: specific inputs, default is ones. (optional)
+        logdir: tensorboard output directory, default is /tmp/tensorboard. (optional)
+        options: ProfilerOptions, view https://www.tensorflow.org/api_docs/python/tf/profiler/experimental/ProfilerOptions. (optional)
+
+    Returns:
+        A list of Tensors, run results.
+
+    """
     if isinstance(graph_def, str):
         graphdef = tf.GraphDef()
         with tf.io.gfile.GFile(graph_def, 'rb') as f:
